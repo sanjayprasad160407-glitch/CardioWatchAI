@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="CardioWatch AI educational ECG analysis prototype">
+  <title>CardioWatch AI — ECG Monitoring</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css">
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="#dashboard">
+      <span class="brand-mark">♥</span>
+      <span><b>CardioWatch AI</b><small>ECG Arrhythmia Detection & Risk Alerting</small></span>
+    </a>
+    <nav class="top-nav" aria-label="Primary">
+      <a class="active" href="#dashboard">Dashboard</a>
+      <a href="#analyze">Analyze ECG</a>
+      <a href="#events">Recent Events</a>
+      <a href="#assistant">AI Assistant</a>
+      <a href="#about">About</a>
+    </nav>
+    <div class="system-status"><span class="status-dot" id="statusDot"></span><span id="systemStatus">Checking model…</span></div>
+  </div>
+</header>
+
+<main id="dashboard" class="container">
+  <section class="hero">
+    <div class="hero-copy">
+      <span class="eyebrow">AI-POWERED ECG INTELLIGENCE</span>
+      <h1>Patient Monitoring Overview</h1>
+      <p>CardioWatch AI combines ECG signal processing, machine learning, waveform visualization, explainable AI, and prototype alerting in one focused monitoring workspace.</p>
+      <div class="project-strip" style="margin-top:22px;max-width:900px">
+        <div class="project-chip"><div class="chip-icon">ECG</div><div><strong>ECG Signal Analysis</strong><span>Filter & inspect waveform data</span></div></div>
+        <div class="project-chip"><div class="chip-icon">AI</div><div><strong>Arrhythmia Screening</strong><span>CNN-based prototype classification</span></div></div>
+        <div class="project-chip"><div class="chip-icon">↗</div><div><strong>Explainable AI</strong><span>Highlight influential regions</span></div></div>
+        <div class="project-chip"><div class="chip-icon">⚡</div><div><strong>Risk Alerting</strong><span>Prototype event escalation</span></div></div>
+      </div>
+    </div>
+    <div class="pulse-caption">LIVE SIGNAL VISUALIZATION</div>
+    <svg class="hero-pulse" viewBox="0 0 390 160" aria-hidden="true">
+      <g>
+        <path class="gridline" d="M0 38H390 M0 80H390 M0 122H390"/>
+        <path class="gridline" d="M35 0V160 M85 0V160 M135 0V160 M185 0V160 M235 0V160 M285 0V160 M335 0V160"/>
+        <path class="pulse-line" d="M0 86 L40 86 L52 86 L62 78 L72 90 L84 86 L93 86 L106 86 L120 86 L132 86 L142 86 L151 53 L159 114 L168 86 L185 86 L204 86 L218 86 L232 86 L243 86 L253 76 L263 94 L275 86 L292 86 L308 86 L320 86 L330 86 L339 48 L347 118 L356 86 L390 86"/>
+      </g>
+    </svg>
+    <div class="hero-actions">
+      <button class="secondary-button" id="liveDemoBtn">Start Live Demo</button>
+      <a class="secondary-button link-btn" href="#analyze">Analyze ECG</a>
+    </div>
+  </section>
+
+  <section class="summary-grid" aria-label="Summary">
+    <article class="summary-card"><span>Patient</span><strong id="summaryPatient">Demo-001</strong><small>Current profile</small></article>
+    <article class="summary-card"><span>Heart Rate</span><strong id="heartRate">—</strong><small>BPM · prototype estimate</small></article>
+    <article class="summary-card"><span>Latest Rhythm</span><strong id="summaryRhythm">—</strong><small>ML classification</small></article>
+    <article class="summary-card"><span>Latest Alert</span><strong id="summaryAlert">—</strong><small>Educational alert engine</small></article>
+  </section>
+
+  <section class="two-col" id="analyze">
+    <article class="card">
+      <div class="section-head"><div><span class="eyebrow">PATIENT & INPUT</span><h2>Patient Profile</h2></div><span class="pill">Software only</span></div>
+      <div class="form-grid">
+        <label>Patient ID<input id="patientId" value="Demo-001" maxlength="60"></label>
+        <label>Age<input id="age" type="number" min="1" max="120" placeholder="22"></label>
+        <label>Sex<select id="sex"><option value="">Select</option><option>Female</option><option>Male</option><option>Other</option></select></label>
+        <label>Risk profile<select id="riskProfile"><option>Standard</option><option>Monitor</option><option>High attention</option></select></label>
+      </div>
+      <label>Notes<textarea id="notes" rows="2" maxlength="500" placeholder="Optional prototype notes"></textarea></label>
+      <button class="secondary-button" id="savePatientBtn">Save Patient</button>
+    </article>
+
+    <article class="card">
+      <div class="section-head"><div><span class="eyebrow">AI ANALYSIS</span><h2>Upload ECG</h2></div><span class="step-badge">STEP 1 · ANALYZE</span></div>
+      <form id="uploadForm">
+        <div class="upload-row">
+          <label class="grow">ECG CSV file<input id="ecgFile" name="file" type="file" accept=".csv" required></label>
+          <label class="rate-field">Sampling rate (Hz)<input id="samplingRate" name="sampling_rate" type="number" min="10" max="2000" value="360"></label>
+        </div>
+        <button class="primary-button" type="submit" id="analyzeButton">Analyze ECG</button>
+      </form>
+      <div id="message" class="message">Ready for ECG analysis.</div>
+      <div class="quick-note"><b>Demo:</b> use the included <code>test_ecg.csv</code> after running <code>python create_demo_ecg.py</code>.</div>
+    </article>
+  </section>
+
+  <section class="metrics-grid" id="liveMetrics">
+    <article class="metric-card"><span class="metric-icon">AI</span><div><span>Prediction</span><strong id="prediction">—</strong><small id="subtypeResult">—</small></div></article>
+    <article class="metric-card"><span class="metric-icon">%</span><div><span>Confidence</span><strong id="confidence">—</strong></div></article>
+    <article class="metric-card"><span class="metric-icon">SQ</span><div><span>Signal Quality</span><strong id="quality">—</strong></div></article>
+    <article class="metric-card alert-metric"><span class="metric-icon">!</span><div><span>Alert Level</span><strong id="alert">—</strong></div></article>
+  </section>
+
+  <section class="card waveform-card">
+    <div class="section-head">
+      <div><span class="eyebrow">SIGNAL VIEW</span><h2>ECG Waveform</h2><p>Zoom, pan, and inspect the ECG signal returned by the analysis API.</p></div>
+      <span id="waveformInfo" class="pill">No signal loaded</span>
+    </div>
+    <div id="ecgChart" class="chart"><div class="chart-empty">Upload an ECG to display the waveform.</div></div>
+    <div class="live-bar"><span id="liveStatus">Live demo stopped</span><div class="live-progress"><span id="liveProgress"></span></div><span id="liveClock">—</span></div>
+  </section>
+
+  <section class="explain-grid">
+    <article class="card">
+      <div class="section-head"><div><span class="eyebrow">EXPLAINABLE AI</span><h2>Why the model flagged this segment</h2></div><span class="pill">Saliency</span></div>
+      <p id="explainText">Run an ECG analysis to generate a prototype explanation for the selected model class.</p>
+      <div class="saliency-list" id="saliencyList"><div class="muted">No highlighted regions yet.</div></div>
+    </article>
+    <article class="card">
+      <div class="section-head"><div><span class="eyebrow">EVENT ACTIONS</span><h2>Current Event</h2></div><span id="eventId" class="pill">No event</span></div>
+      <div class="action-grid"><button class="secondary-button" id="fhirBtn" disabled>Export FHIR Observation</button><button class="secondary-button" id="reviewBtn">Mark Reviewed</button></div>
+      <div id="reviewStatus" class="review-status">Not reviewed</div>
+    </article>
+  </section>
+
+  <section id="events" class="card">
+    <div class="section-head"><div><span class="eyebrow">HISTORY</span><h2>Recent Events</h2><p>Latest analysis records for the selected patient.</p></div><button class="secondary-button" id="refreshEvents">Refresh</button></div>
+    <div class="table-wrap"><table><thead><tr><th>Time</th><th>Prediction</th><th>Confidence</th><th>Quality</th><th>Heart Rate</th><th>Alert</th><th>Review</th></tr></thead><tbody id="eventsBody"><tr><td colspan="7" class="empty-row">No events yet.</td></tr></tbody></table></div>
+  </section>
+
+  <section id="assistant" class="card assistant-card">
+    <div class="section-head"><div><span class="eyebrow">AI CHATBOT</span><h2>CardioWatch Assistant</h2><p>Ask about the selected patient's recorded events. Powered by the OpenAI API. Configure OPENAI_API_KEY on the server to enable the assistant.</p></div><span class="pill" id="chatMode">API mode</span></div>
+    <div class="chat-log" id="chatLog"><div class="chat-bubble bot">Hello. I can summarize the recorded ECG events for the selected patient.</div></div>
+    <form id="chatForm" class="chat-form"><input id="chatInput" placeholder="Example: What happened during my last event?" autocomplete="off" maxlength="500"><button class="primary-button">Send</button></form>
+  </section>
+
+  <section id="about" class="about-grid">
+    <article class="card"><span class="eyebrow">PROJECT WORKFLOW</span><h2>How CardioWatch AI works</h2><div class="pipeline"><span>ECG</span><b>→</b><span>Filter</span><b>→</b><span>ML Model</span><b>→</b><span>Saliency</span><b>→</b><span>Alert</span></div><p>The software prototype accepts ECG CSV data, applies signal preprocessing, classifies a selected window with either the real trained CNN or the local demo ML model, records the event, and presents the result in the dashboard.</p></article>
+    <article class="card"><span class="eyebrow">SAFETY</span><h2>Important limitation</h2><p>This is an educational/research prototype. Predictions, confidence values, alerts, and chatbot responses are not medical diagnoses, clinical validation, or emergency response. Do not use this software to make treatment decisions.</p></article>
+  </section>
+</main>
+<footer>CardioWatch AI · Educational prototype · Not for diagnosis or emergency medical decisions.</footer>
+<script src="/static/js/app.js"></script>
+</body>
+</html>

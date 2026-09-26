@@ -1,0 +1,11 @@
+{
+  "window_size": 360,
+  "sampling_rate": 360,
+  "classes": [
+    "Normal",
+    "Supraventricular",
+    "PVC",
+    "Fusion"
+  ],
+  "model": "RandomForest synthetic demo"
+}

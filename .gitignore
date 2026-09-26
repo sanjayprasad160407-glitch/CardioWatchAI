@@ -1,0 +1,23 @@
+venv/
+__pycache__/
+*.pyc
+.env
+*.db
+uploads/*
+!uploads/.gitkeep
+data/mitdb/*
+!data/mitdb/.gitkeep
+models/arrhythmia_model.keras
+models/label_encoder.joblib
+models/model_meta.json
+models/real_model_report/*
+
+# Real two-stage trained model artifacts
+models/binary_abnormal_model.keras
+models/binary_abnormal_model_encoder.joblib
+models/binary_abnormal_model_meta.json
+models/rhythm3_model.keras
+models/rhythm3_model_encoder.joblib
+models/rhythm3_model_meta.json
+models/real_model_report/*
+!models/real_model_report/.gitkeep
